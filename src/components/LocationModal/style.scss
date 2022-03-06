@@ -1,0 +1,9 @@
+#location-modal {
+  .modal-content + .modal-footer {
+    display: none;
+  }
+
+  .modal-content .modal-footer > .btn:last-child {
+    margin-left: 15px;
+  }
+}

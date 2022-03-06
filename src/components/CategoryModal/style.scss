@@ -1,0 +1,14 @@
+#category-modal {
+  .modal-content + .modal-footer {
+    display: none;
+  }
+
+  .modal-content .modal-footer > .btn:last-child {
+    margin-left: 15px;
+  }
+}
+
+#toast-container {
+  left: 1%;
+  right: auto !important;
+}
