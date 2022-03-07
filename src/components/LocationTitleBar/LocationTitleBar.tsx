@@ -32,7 +32,7 @@ const LocationTitleBar = ({
   return (
     <div className="location-title-container">
       <div className="location-title">
-        {selectedLocation ? selectedLocation.name : "Location_Name"}
+        {selectedLocation ? selectedLocation.name : "Select a Location"}
       </div>
       {selectedLocation && (
         <EditBtn

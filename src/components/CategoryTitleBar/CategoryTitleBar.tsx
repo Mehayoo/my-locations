@@ -92,7 +92,8 @@ const CategoryTitleBar = ({
         </div>
       ) : (
         <div className="category-title">
-          {selectedCategory ? category : "Category_Name"}
+          {/* {selectedCategory ? category : "Select a Category"} */}
+          {selectedCategory ? selectedCategory.name : "Select a Category"}
         </div>
       )}
       {selectedCategory && (
