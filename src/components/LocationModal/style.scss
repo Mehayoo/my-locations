@@ -1,4 +1,6 @@
 #location-modal {
+  max-height: fit-content;
+
   .modal-content + .modal-footer {
     display: none;
   }
