@@ -75,7 +75,7 @@ const LocationModal = ({
     } else {
       if (
         !(
-          checkIfNestedPropertyIsEmpty(location) &&
+          checkIfNestedPropertyIsEmpty(location) ||
           checkIfNestedPropertyExists(location, selectedCategory.locations)
         )
       ) {

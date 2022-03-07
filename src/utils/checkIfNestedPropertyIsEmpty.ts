@@ -11,5 +11,6 @@ export const checkIfNestedPropertyIsEmpty = (obj: any) => {
       result = true;
     }
   });
+
   return result;
 };
