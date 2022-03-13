@@ -3,14 +3,25 @@ import { isObject } from "lodash";
 export const checkIfNestedPropertyIsEmpty = (obj: any) => {
   let result = false;
 
-  Object.keys(obj).forEach((key) => {
-    if (isObject(obj[key])) {
-      checkIfNestedPropertyIsEmpty(obj[key]);
-    } else if (obj[key] === "") {
-      M.toast({ html: `Please fill the ${key} field` });
-      result = true;
+  const recurse = (searchObj: any) => {
+    for (const key in searchObj) {
+      if (searchObj[key] === "") {
+        M.toast({ html: `Please fill the ${key} field` });
+        result = true;
+
+        break;
+      } else {
+        if (isObject(searchObj[key])) {
+          recurse(searchObj[key]);
+          if (result) {
+            break;
+          }
+        }
+      }
     }
-  });
+  };
+
+  recurse(obj);
 
   return result;
 };
