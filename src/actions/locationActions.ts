@@ -1,4 +1,3 @@
-import { ILocation } from "../entityTypes/ILocation";
 import * as actionTypes from "./types";
 
 export const addNewCategoryToLocation = (category: string) => ({
