@@ -49,7 +49,7 @@ const Toolbar = ({
 							setIsViewMode(true)
 						}}
 						small
-						style={{ marginLeft: '15px' }}
+						style={{ marginLeft: '1rem' }}
 						tooltip="View details"
 						waves="light"
 					/>
@@ -63,7 +63,7 @@ const Toolbar = ({
 						node="button"
 						onClick={deleteFunction}
 						small
-						style={{ marginLeft: '15px' }}
+						style={{ marginLeft: '1rem' }}
 						tooltip={deleteTooltipMsg}
 						waves="light"
 					/>
@@ -79,7 +79,7 @@ const Toolbar = ({
 							setIsModalOpen(true)
 						}}
 						small
-						style={{ marginRight: '15px' }}
+						style={{ marginRight: '1rem' }}
 						tooltip={addTooltipMsg}
 						waves="light"
 					/>

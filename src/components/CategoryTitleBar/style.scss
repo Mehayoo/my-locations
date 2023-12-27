@@ -1,19 +1,19 @@
 .category-title-input-container {
-  align-items: center;
-  display: flex;
-  height: 100%;
+	align-items: center;
+	display: flex;
+	height: 100%;
 
-  .title-input {
-    align-items: center;
-    display: flex;
-    height: inherit;
+	.title-input {
+		align-items: center;
+		display: flex;
+		height: inherit;
 
-    .btn {
-      margin-left: 15px;
-    }
-  }
+		.btn {
+			margin-left: 1rem;
+		}
+	}
 
-  .category-title {
-    font-size: 20px;
-  }
+	.category-title {
+		font-size: 1.25rem;
+	}
 }
