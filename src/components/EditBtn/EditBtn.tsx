@@ -1,4 +1,5 @@
 import { Button, Icon } from 'react-materialize'
+import { Icons } from '../../constants/icons'
 
 interface IEditBtnProps {
 	editMode: 'inline' | 'popup'
@@ -16,9 +17,13 @@ const EditBtn = ({
 	const RenderIcon = () => {
 		switch (editMode) {
 			case 'inline':
-				return editingState ? <Icon>close</Icon> : <Icon>create</Icon>
+				return editingState ? (
+					<Icon>{Icons.CLOSE}</Icon>
+				) : (
+					<Icon>{Icons.CREATE}</Icon>
+				)
 			case 'popup':
-				return <Icon>create</Icon>
+				return <Icon>{Icons.CREATE}</Icon>
 		}
 	}
 

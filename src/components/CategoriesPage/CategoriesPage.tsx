@@ -10,6 +10,7 @@ import {
 } from '../../actions/categoryActions'
 import { ICategory } from '../../entityTypes/ICategory'
 import { useOutsideOfAreaClick } from '../../hooks/useOutsideOfAreaClick'
+import { Icons } from '../../constants/icons'
 
 const CategoriesPage = () => {
 	const navigate = useNavigate()
@@ -75,7 +76,7 @@ const CategoriesPage = () => {
 					{(item) => (
 						<Button
 							flat
-							icon={<Icon>send</Icon>}
+							icon={<Icon>{Icons.SEND}</Icon>}
 							node="button"
 							onClick={() => {
 								navigate(`/${item?.name}/locations`)

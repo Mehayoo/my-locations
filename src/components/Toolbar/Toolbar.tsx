@@ -1,5 +1,6 @@
 import { ReactElement, useState } from 'react'
 import { Button, Icon } from 'react-materialize'
+import { Icons } from '../../constants/icons'
 
 import './style.scss'
 
@@ -22,7 +23,6 @@ const Toolbar = ({
 	selectedItem,
 	setIsModalOpen,
 }: IToolbarProps) => {
-	// const [isOpen, setIsOpen] = useState(false)
 	const [isViewMode, setIsViewMode] = useState(false)
 	const [isEditMode, setIsEditMode] = useState(false)
 
@@ -42,7 +42,7 @@ const Toolbar = ({
 					<Button
 						className="grey"
 						floating
-						icon={<Icon>remove_red_eye</Icon>}
+						icon={<Icon>{Icons.VIEW_DETAILS}</Icon>}
 						node="button"
 						onClick={() => {
 							setIsModalOpen(true)
@@ -59,7 +59,7 @@ const Toolbar = ({
 					<Button
 						className="red"
 						floating
-						icon={<Icon>delete</Icon>}
+						icon={<Icon>{Icons.DELETE}</Icon>}
 						node="button"
 						onClick={deleteFunction}
 						small
@@ -73,7 +73,7 @@ const Toolbar = ({
 					<Button
 						className="green"
 						floating
-						icon={<Icon>add</Icon>}
+						icon={<Icon>{Icons.ADD}</Icon>}
 						node="button"
 						onClick={() => {
 							setIsModalOpen(true)

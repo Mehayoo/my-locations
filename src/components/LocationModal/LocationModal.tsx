@@ -7,6 +7,7 @@ import { ILocation } from '../../entityTypes/ILocation'
 import { v4 as uuidv4 } from 'uuid'
 import { nestedPropertyIsEmpty } from '../../utils/nestedPropertyIsEmpty'
 import { nestedPropertyExists } from '../../utils/nestedPropertyExists'
+import { Icons } from '../../constants/icons'
 
 import M from 'materialize-css'
 import './style.scss'
@@ -228,7 +229,7 @@ const LocationModal = ({
 				</Button>
 
 				<Button disabled={isViewMode} node="button" onClick={onSubmit}>
-					<Icon right>send</Icon>Submit
+					<Icon right>{Icons.SEND}</Icon>Submit
 				</Button>
 			</Modal.Footer>
 		</Modal>

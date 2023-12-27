@@ -11,6 +11,7 @@ import {
 import { ICategory } from '../../entityTypes/ICategory'
 import { ILocation } from '../../entityTypes/ILocation'
 import { useOutsideOfAreaClick } from '../../hooks/useOutsideOfAreaClick'
+import { Icons } from '../../constants/icons'
 
 const LocationsPage = () => {
 	const [isModalOpen, setIsModalOpen] = useState(false)
@@ -84,7 +85,7 @@ const LocationsPage = () => {
 			</div>
 			<div className="section">
 				<Button
-					icon={<Icon left>arrow_back</Icon>}
+					icon={<Icon left>{Icons.ARROW_BACK}</Icon>}
 					node="button"
 					onClick={() => {
 						navigate(`/`)

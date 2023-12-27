@@ -6,6 +6,7 @@ import { addCategory } from '../../actions/categoryActions'
 import { ICategory } from '../../entityTypes/ICategory'
 import { v4 as uuidv4 } from 'uuid'
 import { findExisting } from '../../utils/findExisting'
+import { Icons } from '../../constants/icons'
 
 import M from 'materialize-css'
 import './style.scss'
@@ -102,7 +103,7 @@ const CategoryModal = ({
 				</Button>
 
 				<Button disabled={isViewMode} node="button" onClick={onSubmit}>
-					Submit <Icon right>send</Icon>
+					Submit <Icon right>{Icons.SEND}</Icon>
 				</Button>
 			</Modal.Footer>
 		</Modal>
