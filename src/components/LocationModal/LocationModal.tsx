@@ -1,13 +1,13 @@
 import { useEffect, useRef, useState } from 'react'
 import { Modal } from 'react-bootstrap'
 import { Button, Icon } from 'react-materialize'
-import { useDispatch, useSelector } from 'react-redux'
-import { addLocation, editLocation } from '../../actions/categoryActions'
-import { ILocation } from '../../entityTypes/ILocation'
 import { v4 as uuidv4 } from 'uuid'
+import { RootState, useAppDispatch, useAppSelector } from '../../store/store'
+import { addLocation, editLocation } from '../../actions/categoryActions'
+import { ILocation } from '../../entityTypes'
 import { nestedPropertyIsEmpty } from '../../utils/nestedPropertyIsEmpty'
 import { nestedPropertyExists } from '../../utils/nestedPropertyExists'
-import { Icons } from '../../constants/icons'
+import { Icons, literals } from '../../constants'
 
 import M from 'materialize-css'
 import './style.scss'
@@ -31,6 +31,11 @@ const LocationModal = ({
 	setIsOpen,
 	setIsViewMode,
 }: ILocationModalProps) => {
+	const {
+		locationsPage: {
+			modal: { buttons, createTitle, form, toast, viewTitle },
+		},
+	} = literals
 	const [location, setLocation] = useState<ILocation>({
 		name: '',
 		address: '',
@@ -41,10 +46,10 @@ const LocationModal = ({
 	})
 	const selectedLocationId = useRef('')
 
-	const selectedCategory = useSelector(
-		(state: any) => state.categoriesReducer.currentCategory
+	const selectedCategory = useAppSelector(
+		(state: RootState) => state.categoriesReducer.currentCategory
 	)
-	const dispatch = useDispatch()
+	const dispatch = useAppDispatch()
 
 	useEffect(() => {
 		if (selectedLocation) {
@@ -70,7 +75,7 @@ const LocationModal = ({
 						},
 					})
 				)
-				M.toast({ html: `Location updated` })
+				M.toast({ html: toast.updatedPrompt })
 				resetFieldsValue()
 				setIsOpen(false)
 			}
@@ -91,7 +96,7 @@ const LocationModal = ({
 						},
 					})
 				)
-				M.toast({ html: `New Location added` })
+				M.toast({ html: toast.addedPrompt })
 				resetFieldsValue()
 				setIsOpen(false)
 			}
@@ -119,13 +124,13 @@ const LocationModal = ({
 		>
 			<Modal.Header>
 				<Modal.Title id="contained-modal-title-vcenter">
-					{isViewMode ? 'Location Details' : 'Enter New Location'}
+					{isViewMode ? viewTitle : createTitle}
 				</Modal.Title>
 			</Modal.Header>
 			<Modal.Body>
 				<div className="row">
 					<label htmlFor="name" className="active">
-						Location Name
+						{form.locationName}
 					</label>
 					<input
 						disabled={isViewMode}
@@ -143,7 +148,7 @@ const LocationModal = ({
 
 				<div className="row">
 					<label htmlFor="address" className="active">
-						Location Address
+						{form.locationAddress}
 					</label>
 					<input
 						disabled={isViewMode}
@@ -162,7 +167,7 @@ const LocationModal = ({
 				<div className="row col s12">
 					<div className="col s6">
 						<label className="active" htmlFor="lat">
-							Latitude
+							{form.locationLatitude}
 						</label>
 						<input
 							disabled={isViewMode}
@@ -182,7 +187,7 @@ const LocationModal = ({
 					</div>
 					<div className="col s6">
 						<label className="active" htmlFor="lng">
-							Longitude
+							{form.locationLongitude}
 						</label>
 						<input
 							disabled={isViewMode}
@@ -204,7 +209,7 @@ const LocationModal = ({
 
 				<div className="row">
 					<label htmlFor="category.name" className="active">
-						Category
+						{form.locationCategory}
 					</label>
 					<input
 						disabled
@@ -225,11 +230,12 @@ const LocationModal = ({
 						setIsViewMode(false)
 					}}
 				>
-					Close
+					{buttons.close}
 				</Button>
 
 				<Button disabled={isViewMode} node="button" onClick={onSubmit}>
-					<Icon right>{Icons.SEND}</Icon>Submit
+					<Icon right>{Icons.SEND}</Icon>
+					{buttons.submit}
 				</Button>
 			</Modal.Footer>
 		</Modal>

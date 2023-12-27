@@ -1,12 +1,12 @@
 import { useEffect, useRef, useState } from 'react'
-import { RootState, useAppDispatch, useAppSelector } from '../../store/store'
 import { Modal } from 'react-bootstrap'
 import { Button, Icon } from 'react-materialize'
-import { addCategory } from '../../actions/categoryActions'
-import { ICategory } from '../../entityTypes/ICategory'
 import { v4 as uuidv4 } from 'uuid'
+import { RootState, useAppDispatch, useAppSelector } from '../../store/store'
+import { addCategory } from '../../actions/categoryActions'
+import { ICategory } from '../../entityTypes'
 import { findExisting } from '../../utils/findExisting'
-import { Icons } from '../../constants/icons'
+import { Icons, literals } from '../../constants'
 
 import M from 'materialize-css'
 import './style.scss'
@@ -26,6 +26,9 @@ const CategoryModal = ({
 	setIsOpen,
 	setIsViewMode,
 }: IAddCategoryModalProps) => {
+	const {
+		categoriesPage: { modal },
+	} = literals
 	const categoriesState = useAppSelector(
 		(state: RootState) => state.categoriesReducer
 	)
@@ -43,14 +46,14 @@ const CategoryModal = ({
 
 	const onSubmit = () => {
 		if (category === '') {
-			M.toast({ html: 'Please enter a category' })
+			M.toast({ html: modal.toast.addPrompt })
 		} else if (findExisting(existingCategories, 'name', category)) {
-			M.toast({ html: `Category already exists` })
+			M.toast({ html: modal.toast.alreadyExistsPrompt })
 		} else {
 			dispatch(
 				addCategory({ id: uuidv4(), name: category, locations: [] })
 			)
-			M.toast({ html: `New Category added` })
+			M.toast({ html: modal.toast.addedPrompt })
 			setCategory('')
 			setIsOpen(false)
 		}
@@ -66,13 +69,13 @@ const CategoryModal = ({
 		>
 			<Modal.Header>
 				<Modal.Title id="contained-modal-title-vcenter">
-					{isViewMode ? 'Category Details' : 'Enter New Category'}
+					{isViewMode ? modal.viewTitle : modal.createTitle}
 				</Modal.Title>
 			</Modal.Header>
 			<Modal.Body>
 				<div className="row">
 					<label htmlFor="name" className="active">
-						Category Name
+						{modal.form.categoryName}
 					</label>
 					<input
 						disabled={isViewMode}
@@ -99,11 +102,11 @@ const CategoryModal = ({
 						setIsViewMode(false)
 					}}
 				>
-					Close
+					{modal.buttons.close}
 				</Button>
 
 				<Button disabled={isViewMode} node="button" onClick={onSubmit}>
-					Submit <Icon right>{Icons.SEND}</Icon>
+					{modal.buttons.submit} <Icon right>{Icons.SEND}</Icon>
 				</Button>
 			</Modal.Footer>
 		</Modal>

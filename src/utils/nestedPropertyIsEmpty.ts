@@ -1,4 +1,7 @@
 import { isObject } from 'lodash'
+import { literals } from '../constants'
+
+const { general } = literals
 
 export const nestedPropertyIsEmpty = (obj: any) => {
 	let result = false
@@ -6,7 +9,7 @@ export const nestedPropertyIsEmpty = (obj: any) => {
 	const recurse = (searchObj: any) => {
 		for (const key in searchObj) {
 			if (searchObj[key] === '') {
-				M.toast({ html: `Please fill the ${key} field` })
+				M.toast({ html: general.fieldEmpty(key) })
 				result = true
 
 				break

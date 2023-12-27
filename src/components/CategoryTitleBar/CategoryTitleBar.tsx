@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react'
-import { RootState, useAppDispatch, useAppSelector } from '../../store/store'
 import { Button } from 'react-materialize'
-import { EditBtn } from '../index'
+import { RootState, useAppDispatch, useAppSelector } from '../../store/store'
 import { editCategory, setCurrentCategory } from '../../actions/categoryActions'
+import { EditBtn } from '../index'
 import { findExisting } from '../../utils/findExisting'
+import { literals } from '../../constants'
 
 import M from 'materialize-css'
 import './style.scss'
@@ -17,6 +18,9 @@ const CategoryTitleBar = ({
 	isEditMode,
 	setIsEditMode,
 }: ICategoryTitleBarProps) => {
+	const {
+		categoriesPage: { toolbar },
+	} = literals
 	const [category, setCategory] = useState('')
 
 	const categoriesState = useAppSelector(
@@ -39,9 +43,9 @@ const CategoryTitleBar = ({
 
 	const onSubmit = () => {
 		if (category === '') {
-			M.toast({ html: 'Please enter a category' })
+			M.toast({ html: toolbar.toast.addPrompt })
 		} else if (findExisting(existingCategories, 'name', category)) {
-			M.toast({ html: `Category already exists` })
+			M.toast({ html: toolbar.toast.alreadyExistsPrompt })
 		} else {
 			dispatch(
 				editCategory({
@@ -59,7 +63,7 @@ const CategoryTitleBar = ({
 			)
 
 			setIsEditMode(false)
-			M.toast({ html: `Category updated` })
+			M.toast({ html: toolbar.toast.updatedPrompt })
 		}
 	}
 
@@ -83,14 +87,12 @@ const CategoryTitleBar = ({
 						type="text"
 						value={category}
 					/>
-					<Button onClick={onSubmit}>Submit</Button>
+					<Button onClick={onSubmit}>{toolbar.buttons.submit}</Button>
 				</div>
 			) : (
 				<div className="category-title">
-					{/* {selectedCategory ? category : "Select a Category"} */}
-					{selectedCategory
-						? selectedCategory.name
-						: 'Select a Category'}
+					{/* {selectedCategory ? category : toolbar.title} */}
+					{selectedCategory ? selectedCategory.name : toolbar.title}
 				</div>
 			)}
 			{selectedCategory && (
@@ -98,7 +100,7 @@ const CategoryTitleBar = ({
 					editMode="inline"
 					editingState={isEditMode}
 					onClick={onClick}
-					tooltipMsg="Toggle editing mode on/off"
+					tooltipMsg={toolbar.tooltips.editTooltipMsg}
 				/>
 			)}
 		</div>

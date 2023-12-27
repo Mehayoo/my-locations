@@ -1,6 +1,6 @@
 import { ReactElement, useState } from 'react'
 import { Button, Icon } from 'react-materialize'
-import { Icons } from '../../constants/icons'
+import { Icons, literals } from '../../constants'
 
 import './style.scss'
 
@@ -9,7 +9,6 @@ interface IToolbarProps {
 	children?: (data?: any) => ReactElement
 	deleteFunction: () => void
 	deleteTooltipMsg: string
-	isModalOpen: boolean
 	selectedItem: any
 	setIsModalOpen: (arg: boolean) => void
 }
@@ -19,10 +18,15 @@ const Toolbar = ({
 	children,
 	deleteFunction,
 	deleteTooltipMsg,
-	isModalOpen,
 	selectedItem,
 	setIsModalOpen,
 }: IToolbarProps) => {
+	const {
+		categoriesPage: {
+			toolbar: { tooltips },
+		},
+	} = literals
+
 	const [isViewMode, setIsViewMode] = useState(false)
 	const [isEditMode, setIsEditMode] = useState(false)
 
@@ -50,7 +54,7 @@ const Toolbar = ({
 						}}
 						small
 						style={{ marginLeft: '1rem' }}
-						tooltip="View details"
+						tooltip={tooltips.viewTooltipMsg}
 						waves="light"
 					/>
 				)}

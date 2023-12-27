@@ -2,17 +2,20 @@ import { useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Button, Icon } from 'react-materialize'
 import { RootState, useAppDispatch, useAppSelector } from '../../store/store'
-import { CategoryModal, CategoryTitleBar, List, Toolbar } from '../index'
 import {
 	clearCurrentCategory,
 	deleteCategory,
 	setCurrentCategory,
 } from '../../actions/categoryActions'
-import { ICategory } from '../../entityTypes/ICategory'
+import { CategoryModal, CategoryTitleBar, List, Toolbar } from '../index'
+import { ICategory } from '../../entityTypes'
 import { useOutsideOfAreaClick } from '../../hooks/useOutsideOfAreaClick'
-import { Icons } from '../../constants/icons'
+import { Icons, literals } from '../../constants'
 
 const CategoriesPage = () => {
+	const {
+		categoriesPage: { buttons, emptyList, toolbar },
+	} = literals
 	const navigate = useNavigate()
 	const [isModalOpen, setIsModalOpen] = useState(false)
 
@@ -38,10 +41,9 @@ const CategoriesPage = () => {
 		<div className="container" ref={wrapperRef}>
 			<div className="section">
 				<Toolbar
-					addTooltipMsg="Add a new category"
+					addTooltipMsg={toolbar.tooltips.addTooltipMsg}
 					deleteFunction={deleteFunction}
-					deleteTooltipMsg="Delete category"
-					isModalOpen={isModalOpen}
+					deleteTooltipMsg={toolbar.tooltips.deleteTooltipMsg}
 					selectedItem={currentCategory}
 					setIsModalOpen={setIsModalOpen}
 				>
@@ -68,7 +70,7 @@ const CategoriesPage = () => {
 					)}
 				</Toolbar>
 				<List
-					emptyMsg="List is currently empty. Add some categories."
+					emptyMsg={emptyList}
 					listItems={categories}
 					onItemClick={onItemClick}
 					selectedItem={currentCategory}
@@ -81,7 +83,7 @@ const CategoriesPage = () => {
 							onClick={() => {
 								navigate(`/${item?.name}/locations`)
 							}}
-							tooltip={`View Locations for ${item?.name}`}
+							tooltip={buttons.viewLocationsTooltip(item?.name)}
 						/>
 					)}
 				</List>

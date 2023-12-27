@@ -1,5 +1,6 @@
-import { EditBtn } from '../index'
 import { RootState, useAppSelector } from '../../store/store'
+import { EditBtn } from '../index'
+import { literals } from '../../constants'
 
 import './style.scss'
 
@@ -14,6 +15,11 @@ const LocationTitleBar = ({
 	setIsEditMode,
 	setIsOpen,
 }: ILocationTitleBarProps) => {
+	const {
+		locationsPage: {
+			toolbar: { title, tooltips },
+		},
+	} = literals
 	const categoriesState = useAppSelector(
 		(state: RootState) => state.categoriesReducer
 	)
@@ -27,14 +33,14 @@ const LocationTitleBar = ({
 	return (
 		<div className="location-title-container">
 			<div className="location-title">
-				{selectedLocation ? selectedLocation.name : 'Select a Location'}
+				{selectedLocation ? selectedLocation.name : title}
 			</div>
 			{selectedLocation && (
 				<EditBtn
 					editMode="popup"
 					editingState={isEditMode}
 					onClick={onClick}
-					tooltipMsg="Edit location"
+					tooltipMsg={tooltips.editTooltipMsg}
 				/>
 			)}
 		</div>

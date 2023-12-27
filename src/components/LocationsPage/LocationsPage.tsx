@@ -2,18 +2,20 @@ import { useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Button, Icon } from 'react-materialize'
 import { RootState, useAppDispatch, useAppSelector } from '../../store/store'
-import { Toolbar, List, LocationModal, LocationTitleBar } from '../index'
 import {
 	clearCurrentLocation,
 	deleteLocation,
 	setCurrentLocation,
 } from '../../actions/categoryActions'
-import { ICategory } from '../../entityTypes/ICategory'
-import { ILocation } from '../../entityTypes/ILocation'
+import { Toolbar, List, LocationModal, LocationTitleBar } from '../index'
+import { ICategory, ILocation } from '../../entityTypes'
 import { useOutsideOfAreaClick } from '../../hooks/useOutsideOfAreaClick'
-import { Icons } from '../../constants/icons'
+import { Icons, literals } from '../../constants'
 
 const LocationsPage = () => {
+	const {
+		locationsPage: { buttons, emptyList, toolbar },
+	} = literals
 	const [isModalOpen, setIsModalOpen] = useState(false)
 
 	const wrapperRef = useRef<HTMLDivElement>(null)
@@ -44,10 +46,9 @@ const LocationsPage = () => {
 		<div className="container" ref={wrapperRef}>
 			<div className="section">
 				<Toolbar
-					addTooltipMsg="Add a new location"
+					addTooltipMsg={toolbar.tooltips.addTooltipMsg}
 					deleteFunction={deleteFunction}
-					deleteTooltipMsg="Delete location"
-					isModalOpen={isModalOpen}
+					deleteTooltipMsg={toolbar.tooltips.deleteTooltipMsg}
 					selectedItem={currentLocation}
 					setIsModalOpen={setIsModalOpen}
 				>
@@ -77,7 +78,7 @@ const LocationsPage = () => {
 					)}
 				</Toolbar>
 				<List
-					emptyMsg={`List for ${currentCategory.name} category is currently empty. Add some locations.`}
+					emptyMsg={emptyList(currentCategory.name)}
 					listItems={listItems[0].locations}
 					onItemClick={onItemClick}
 					selectedItem={currentLocation}
@@ -92,7 +93,7 @@ const LocationsPage = () => {
 						dispatch(clearCurrentLocation())
 					}}
 				>
-					Back to Categories
+					{buttons.back}
 				</Button>
 			</div>
 		</div>

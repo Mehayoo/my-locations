@@ -1,17 +1,16 @@
 import { useNavigate } from 'react-router-dom'
 import { Button, Icon } from 'react-materialize'
-import { Icons } from '../../constants/icons'
+import { Icons, literals } from '../../constants'
+
 import './style.scss'
 
 const AboutPage = () => {
+	const { aboutPage } = literals
 	const navigate = useNavigate()
 
 	return (
 		<div className="container">
-			<div className="section">
-				This is a demo app for WellDone Software. @Copyright Sorin-Ionut
-				Mihaiu, 2022.
-			</div>
+			<div className="section">{aboutPage.content}</div>
 			<div className="section">
 				<Button
 					icon={<Icon left>{Icons.ARROW_BACK}</Icon>}
@@ -20,7 +19,7 @@ const AboutPage = () => {
 						navigate(`/`)
 					}}
 				>
-					Go back to HomePage
+					{aboutPage.buttons.back}
 				</Button>
 			</div>
 		</div>

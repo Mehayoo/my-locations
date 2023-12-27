@@ -1,5 +1,5 @@
 import { Button, Icon } from 'react-materialize'
-import { Icons } from '../../constants/icons'
+import { Icons } from '../../constants'
 
 interface IEditBtnProps {
 	editMode: 'inline' | 'popup'
