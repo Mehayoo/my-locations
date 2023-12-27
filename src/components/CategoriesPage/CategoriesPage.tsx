@@ -1,4 +1,4 @@
-import { useRef } from 'react'
+import { useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Button, Icon } from 'react-materialize'
 import { RootState, useAppDispatch, useAppSelector } from '../../store/store'
@@ -13,9 +13,10 @@ import { useOutsideOfAreaClick } from '../../hooks/useOutsideOfAreaClick'
 
 const CategoriesPage = () => {
 	const navigate = useNavigate()
+	const [isModalOpen, setIsModalOpen] = useState(false)
 
 	const wrapperRef = useRef<HTMLDivElement>(null)
-	useOutsideOfAreaClick(wrapperRef, clearCurrentCategory)
+	useOutsideOfAreaClick(wrapperRef, clearCurrentCategory, isModalOpen)
 
 	const categoriesState = useAppSelector(
 		(state: RootState) => state.categoriesReducer
@@ -39,15 +40,15 @@ const CategoriesPage = () => {
 					addTooltipMsg="Add a new category"
 					deleteFunction={deleteFunction}
 					deleteTooltipMsg="Delete category"
+					isModalOpen={isModalOpen}
 					selectedItem={currentCategory}
+					setIsModalOpen={setIsModalOpen}
 				>
 					{({
 						isEditMode,
-						isOpen,
 						isViewMode,
 						selectedItem,
 						setIsEditMode,
-						setIsOpen,
 						setIsViewMode,
 					}) => (
 						<>
@@ -56,10 +57,10 @@ const CategoriesPage = () => {
 								setIsEditMode={setIsEditMode}
 							/>
 							<CategoryModal
-								isOpen={isOpen}
+								isOpen={isModalOpen}
 								isViewMode={isViewMode}
 								selectedCategory={selectedItem}
-								setIsOpen={setIsOpen}
+								setIsOpen={setIsModalOpen}
 								setIsViewMode={setIsViewMode}
 							/>
 						</>

@@ -8,7 +8,9 @@ interface IToolbarProps {
 	children?: (data?: any) => ReactElement
 	deleteFunction: () => void
 	deleteTooltipMsg: string
+	isModalOpen: boolean
 	selectedItem: any
+	setIsModalOpen: (arg: boolean) => void
 }
 
 const Toolbar = ({
@@ -16,9 +18,11 @@ const Toolbar = ({
 	children,
 	deleteFunction,
 	deleteTooltipMsg,
+	isModalOpen,
 	selectedItem,
+	setIsModalOpen,
 }: IToolbarProps) => {
-	const [isOpen, setIsOpen] = useState(false)
+	// const [isOpen, setIsOpen] = useState(false)
 	const [isViewMode, setIsViewMode] = useState(false)
 	const [isEditMode, setIsEditMode] = useState(false)
 
@@ -28,11 +32,9 @@ const Toolbar = ({
 				{children &&
 					children({
 						isEditMode,
-						isOpen,
 						isViewMode,
 						selectedItem,
 						setIsEditMode,
-						setIsOpen,
 						setIsViewMode,
 					})}
 
@@ -43,7 +45,7 @@ const Toolbar = ({
 						icon={<Icon>remove_red_eye</Icon>}
 						node="button"
 						onClick={() => {
-							setIsOpen(true)
+							setIsModalOpen(true)
 							setIsViewMode(true)
 						}}
 						small
@@ -74,7 +76,7 @@ const Toolbar = ({
 						icon={<Icon>add</Icon>}
 						node="button"
 						onClick={() => {
-							setIsOpen(true)
+							setIsModalOpen(true)
 						}}
 						small
 						style={{ marginRight: '15px' }}

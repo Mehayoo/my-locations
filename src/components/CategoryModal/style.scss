@@ -3,6 +3,11 @@
 		margin-left: 15px;
 	}
 
+	left: 50% !important;
+	max-height: fit-content !important;
+	right: unset !important;
+	top: 50%;
+	transform: translate(-50%, -50%);
 	z-index: 1055;
 }
 

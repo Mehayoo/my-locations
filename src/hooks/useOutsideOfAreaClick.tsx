@@ -3,12 +3,15 @@ import { useAppDispatch } from '../store/store'
 
 export const useOutsideOfAreaClick = (
 	ref: RefObject<any>,
-	actionFunc: () => void
+	actionFunc: () => void,
+	paused: boolean
 ): void => {
 	const dispatch = useAppDispatch()
 
 	useEffect(() => {
 		const handleClickOutside = (event: MouseEvent) => {
+			if (paused) return
+
 			if (ref.current && !ref.current.contains(event.target)) {
 				dispatch(actionFunc())
 			}
@@ -18,5 +21,5 @@ export const useOutsideOfAreaClick = (
 		return () => {
 			document.removeEventListener('mousedown', handleClickOutside)
 		}
-	}, [actionFunc, dispatch, ref])
+	}, [actionFunc, dispatch, ref, paused])
 }

@@ -1,4 +1,4 @@
-import { useRef } from 'react'
+import { useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Button, Icon } from 'react-materialize'
 import { RootState, useAppDispatch, useAppSelector } from '../../store/store'
@@ -13,8 +13,10 @@ import { ILocation } from '../../entityTypes/ILocation'
 import { useOutsideOfAreaClick } from '../../hooks/useOutsideOfAreaClick'
 
 const LocationsPage = () => {
+	const [isModalOpen, setIsModalOpen] = useState(false)
+
 	const wrapperRef = useRef<HTMLDivElement>(null)
-	useOutsideOfAreaClick(wrapperRef, clearCurrentLocation)
+	useOutsideOfAreaClick(wrapperRef, clearCurrentLocation, isModalOpen)
 
 	const appState = useAppSelector(
 		(state: RootState) => state.categoriesReducer
@@ -44,30 +46,30 @@ const LocationsPage = () => {
 					addTooltipMsg="Add a new location"
 					deleteFunction={deleteFunction}
 					deleteTooltipMsg="Delete location"
+					isModalOpen={isModalOpen}
 					selectedItem={currentLocation}
+					setIsModalOpen={setIsModalOpen}
 				>
 					{({
 						isEditMode,
-						isOpen,
 						isViewMode,
 						selectedItem,
 						setIsEditMode,
-						setIsOpen,
 						setIsViewMode,
 					}) => (
 						<>
 							<LocationTitleBar
 								isEditMode={isEditMode}
 								setIsEditMode={setIsEditMode}
-								setIsOpen={setIsOpen}
+								setIsOpen={setIsModalOpen}
 							/>
 							<LocationModal
 								isEditMode={isEditMode}
-								isOpen={isOpen}
+								isOpen={isModalOpen}
 								isViewMode={isViewMode}
 								selectedLocation={selectedItem}
 								setIsEditMode={setIsEditMode}
-								setIsOpen={setIsOpen}
+								setIsOpen={setIsModalOpen}
 								setIsViewMode={setIsViewMode}
 							/>
 						</>
