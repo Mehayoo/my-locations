@@ -1,49 +1,44 @@
-import { EditBtn } from "../index";
-import { useSelector } from "react-redux";
-import { ICategory } from "../../entityTypes/ICategory";
-import { ILocation } from "../../entityTypes/ILocation";
-import { RootState } from "../../reducers";
+import { EditBtn } from '../index'
+import { RootState, useAppSelector } from '../../store/store'
 
-import "./style.scss";
+import './style.scss'
 
 interface ILocationTitleBarProps {
-  isEditMode: boolean;
-  setIsEditMode: (arg: boolean) => void;
-  setIsOpen: (arg: boolean) => void;
+	isEditMode: boolean
+	setIsEditMode: (arg: boolean) => void
+	setIsOpen: (arg: boolean) => void
 }
 
 const LocationTitleBar = ({
-  isEditMode,
-  setIsEditMode,
-  setIsOpen,
+	isEditMode,
+	setIsEditMode,
+	setIsOpen,
 }: ILocationTitleBarProps) => {
-  const categoriesState = useSelector(
-    (state: RootState) => state.categoriesReducer
-  );
-  const {
-    currentLocation: selectedLocation,
-  }: { categories: ICategory[]; currentLocation: ILocation } = categoriesState;
+	const categoriesState = useAppSelector(
+		(state: RootState) => state.categoriesReducer
+	)
+	const { currentLocation: selectedLocation } = categoriesState
 
-  const onClick = () => {
-    setIsEditMode(true);
-    setIsOpen(true);
-  };
+	const onClick = () => {
+		setIsEditMode(true)
+		setIsOpen(true)
+	}
 
-  return (
-    <div className="location-title-container">
-      <div className="location-title">
-        {selectedLocation ? selectedLocation.name : "Select a Location"}
-      </div>
-      {selectedLocation && (
-        <EditBtn
-          editMode="popup"
-          editingState={isEditMode}
-          onClick={onClick}
-          tooltipMsg="Edit location"
-        />
-      )}
-    </div>
-  );
-};
+	return (
+		<div className="location-title-container">
+			<div className="location-title">
+				{selectedLocation ? selectedLocation.name : 'Select a Location'}
+			</div>
+			{selectedLocation && (
+				<EditBtn
+					editMode="popup"
+					editingState={isEditMode}
+					onClick={onClick}
+					tooltipMsg="Edit location"
+				/>
+			)}
+		</div>
+	)
+}
 
-export default LocationTitleBar;
+export default LocationTitleBar

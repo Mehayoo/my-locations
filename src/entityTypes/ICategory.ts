@@ -1,7 +1,7 @@
-import { ILocation } from "./ILocation";
+import { ILocation } from './ILocation'
 
 export interface ICategory {
-  id: string;
-  name: string;
-  locations: ILocation[];
+	id: string
+	name: string
+	locations: ILocation[] | []
 }

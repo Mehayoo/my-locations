@@ -1,11 +1,31 @@
-#location-modal {
-  max-height: fit-content;
+.location-modal {
+	.modal-content + .modal-footer {
+		display: none;
+	}
 
-  .modal-content + .modal-footer {
-    display: none;
-  }
+	.modal-content .modal-footer > .btn:last-child {
+		margin-left: 15px;
+	}
 
-  .modal-content .modal-footer > .btn:last-child {
-    margin-left: 15px;
-  }
+	left: 50% !important;
+	overflow-y: hidden !important;
+	max-height: fit-content !important;
+	right: unset !important;
+	top: 50%;
+	transform: translate(-50%, -50%);
+	z-index: 1055;
+}
+
+.modal-backdrop {
+	background-color: #000;
+	height: 100vh;
+	left: 0;
+	position: fixed;
+	top: 0;
+	width: 100vw;
+	z-index: 1050;
+}
+
+.modal-backdrop.show {
+	opacity: 0.5;
 }

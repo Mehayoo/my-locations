@@ -1,14 +1,26 @@
-#category-modal {
-  .modal-content + .modal-footer {
-    display: none;
-  }
+.category-modal {
+	.modal-content .modal-footer > .btn:last-child {
+		margin-left: 15px;
+	}
 
-  .modal-content .modal-footer > .btn:last-child {
-    margin-left: 15px;
-  }
+	z-index: 1055;
 }
 
 #toast-container {
-  left: 1%;
-  right: auto !important;
+	left: 1%;
+	right: auto !important;
+}
+
+.modal-backdrop {
+	background-color: #000;
+	height: 100vh;
+	left: 0;
+	position: fixed;
+	top: 0;
+	width: 100vw;
+	z-index: 1050;
+}
+
+.modal-backdrop.show {
+	opacity: 0.5;
 }
