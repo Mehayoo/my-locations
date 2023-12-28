@@ -1,21 +1,14 @@
-import { ReactElement } from 'react'
-import { ICategory, ILocation } from '../../entityTypes'
+import { IBaseItem } from '../../entityTypes'
+import { IListItemProps } from './types'
 
 import './style.scss'
 
-interface IListItemProps {
-	children?: (data: any) => ReactElement
-	item: ICategory | ILocation
-	onItemClick: (arg: any) => void
-	selectedItem: ICategory | ILocation
-}
-
-const ListItem = ({
+const ListItem = <T extends IBaseItem>({
 	children,
 	item,
 	onItemClick,
 	selectedItem,
-}: IListItemProps) => {
+}: IListItemProps<T>) => {
 	return (
 		<li
 			className={`collection-item category-list-item ${

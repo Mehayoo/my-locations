@@ -1,5 +1,7 @@
-import { ICategoriesState, ICategory, ILocation } from '../entityTypes'
-import * as actionTypes from '../actions/types'
+import { ICategoriesState } from '../../../entityTypes/old/ICategoriesState'
+import { ICategory } from '../../../entityTypes/old/ICategory'
+import { ILocation } from '../../../entityTypes/old/ILocation'
+import * as actionTypes from '../../old/actions/types'
 
 const initialState: ICategoriesState = {
 	categories: [],

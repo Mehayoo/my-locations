@@ -1,12 +1,6 @@
 import { Button, Icon } from 'react-materialize'
 import { Icons } from '../../constants'
-
-interface IEditBtnProps {
-	editMode: 'inline' | 'popup'
-	editingState: boolean
-	onClick: () => void
-	tooltipMsg?: string
-}
+import { IEditBtnProps } from './types'
 
 const EditBtn = ({
 	editMode,

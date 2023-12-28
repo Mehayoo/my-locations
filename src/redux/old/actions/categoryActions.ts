@@ -1,4 +1,5 @@
-import { ICategory, ILocation } from '../entityTypes'
+import { ICategory } from '../../../entityTypes/old/ICategory'
+import { ILocation } from '../../../entityTypes/old/ILocation'
 import * as actionTypes from './types'
 
 export const addCategory = (category: ICategory) => ({

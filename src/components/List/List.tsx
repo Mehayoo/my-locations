@@ -1,22 +1,14 @@
-import { ReactElement } from 'react'
 import { ListItem } from '../index'
-import { ICategory, ILocation } from '../../entityTypes'
+import { IBaseItem } from '../../entityTypes'
+import { IListProps } from './types'
 
-interface IListProps {
-	children?: (data: any) => ReactElement
-	emptyMsg: string
-	listItems: ICategory[] | ILocation[]
-	onItemClick: (arg: any) => void
-	selectedItem: ICategory | ILocation
-}
-
-const List = ({
+const List = <T extends IBaseItem>({
 	children,
 	emptyMsg,
 	listItems,
 	onItemClick,
 	selectedItem,
-}: IListProps) => {
+}: IListProps<T>) => {
 	return (
 		<ul className="collection">
 			{listItems.length > 0 ? (

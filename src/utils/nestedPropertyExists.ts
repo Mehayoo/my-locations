@@ -3,7 +3,7 @@ import { literals } from '../constants'
 
 const { general } = literals
 
-export const nestedPropertyExists = (obj: any, arr: any) => {
+export const nestedPropertyExists = (obj: Record<string, any>, arr: any[]) => {
 	let result = false
 
 	Object.keys(obj).forEach((key) => {

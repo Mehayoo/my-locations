@@ -1,19 +1,20 @@
 import { RefObject, useEffect } from 'react'
-import { useAppDispatch } from '../store/store'
+import { ActionCreatorWithoutPayload } from '@reduxjs/toolkit'
+import { useAppDispatch } from '../redux/store'
 
 export const useOutsideOfAreaClick = (
-	ref: RefObject<any>,
-	actionFunc: () => void,
+	ref: RefObject<HTMLElement>,
+	dispatchAction: ActionCreatorWithoutPayload,
 	paused: boolean
 ): void => {
 	const dispatch = useAppDispatch()
 
 	useEffect(() => {
-		const handleClickOutside = (event: MouseEvent) => {
-			if (paused) return
+		const handleClickOutside = (event: MouseEvent): void => {
+			if (paused || !ref.current) return
 
-			if (ref.current && !ref.current.contains(event.target)) {
-				dispatch(actionFunc())
+			if (!ref.current.contains(event.target as Node)) {
+				dispatch(dispatchAction())
 			}
 		}
 		document.addEventListener('mousedown', handleClickOutside)
@@ -21,5 +22,5 @@ export const useOutsideOfAreaClick = (
 		return () => {
 			document.removeEventListener('mousedown', handleClickOutside)
 		}
-	}, [actionFunc, dispatch, ref, paused])
+	}, [dispatchAction, dispatch, ref, paused])
 }

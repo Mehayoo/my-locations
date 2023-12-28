@@ -1,34 +1,27 @@
-import { ReactElement, useState } from 'react'
+import { useState } from 'react'
 import { Button, Icon } from 'react-materialize'
 import { Icons, literals } from '../../constants'
+import { IBaseItem } from '../../entityTypes'
+import { IToolbarProps } from './types'
 
 import './style.scss'
 
-interface IToolbarProps {
-	addTooltipMsg: string
-	children?: (data?: any) => ReactElement
-	deleteFunction: () => void
-	deleteTooltipMsg: string
-	selectedItem: any
-	setIsModalOpen: (arg: boolean) => void
-}
-
-const Toolbar = ({
+const Toolbar = <T extends IBaseItem>({
 	addTooltipMsg,
 	children,
 	deleteFunction,
 	deleteTooltipMsg,
 	selectedItem,
 	setIsModalOpen,
-}: IToolbarProps) => {
+}: IToolbarProps<T>) => {
 	const {
 		categoriesPage: {
 			toolbar: { tooltips },
 		},
 	} = literals
 
-	const [isViewMode, setIsViewMode] = useState(false)
-	const [isEditMode, setIsEditMode] = useState(false)
+	const [isViewMode, setIsViewMode] = useState<boolean>(false)
+	const [isEditMode, setIsEditMode] = useState<boolean>(false)
 
 	return (
 		<nav className="amber accent-4">
@@ -42,35 +35,35 @@ const Toolbar = ({
 						setIsViewMode,
 					})}
 
-				{selectedItem && (
-					<Button
-						className="grey"
-						floating
-						icon={<Icon>{Icons.VIEW_DETAILS}</Icon>}
-						node="button"
-						onClick={() => {
-							setIsModalOpen(true)
-							setIsViewMode(true)
-						}}
-						small
-						style={{ marginLeft: '1rem' }}
-						tooltip={tooltips.viewTooltipMsg}
-						waves="light"
-					/>
-				)}
+				{selectedItem && selectedItem.name && (
+					<>
+						<Button
+							className="grey"
+							floating
+							icon={<Icon>{Icons.VIEW_DETAILS}</Icon>}
+							node="button"
+							onClick={() => {
+								setIsModalOpen(true)
+								setIsViewMode(true)
+							}}
+							small
+							style={{ marginLeft: '1rem' }}
+							tooltip={tooltips.viewTooltipMsg}
+							waves="light"
+						/>
 
-				{selectedItem && (
-					<Button
-						className="red"
-						floating
-						icon={<Icon>{Icons.DELETE}</Icon>}
-						node="button"
-						onClick={deleteFunction}
-						small
-						style={{ marginLeft: '1rem' }}
-						tooltip={deleteTooltipMsg}
-						waves="light"
-					/>
+						<Button
+							className="red"
+							floating
+							icon={<Icon>{Icons.DELETE}</Icon>}
+							node="button"
+							onClick={deleteFunction}
+							small
+							style={{ marginLeft: '1rem' }}
+							tooltip={deleteTooltipMsg}
+							waves="light"
+						/>
+					</>
 				)}
 
 				<div className="add-btn-container">

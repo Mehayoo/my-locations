@@ -1,18 +1,15 @@
 import { useEffect, useState } from 'react'
 import { Button } from 'react-materialize'
-import { RootState, useAppDispatch, useAppSelector } from '../../store/store'
-import { editCategory, setCurrentCategory } from '../../actions/categoryActions'
+import { RootState, useAppDispatch, useAppSelector } from '../../redux/store'
+import { categoryActions } from '../../redux/reducers/categories/slice'
 import { EditBtn } from '../index'
 import { findExisting } from '../../utils/findExisting'
+import { ICategory } from '../../entityTypes'
 import { literals } from '../../constants'
+import { ICategoryTitleBarProps } from './types'
 
 import M from 'materialize-css'
 import './style.scss'
-
-interface ICategoryTitleBarProps {
-	isEditMode: boolean
-	setIsEditMode: (arg: boolean) => void
-}
 
 const CategoryTitleBar = ({
 	isEditMode,
@@ -21,20 +18,22 @@ const CategoryTitleBar = ({
 	const {
 		categoriesPage: { toolbar },
 	} = literals
-	const [category, setCategory] = useState('')
 
+	const dispatch = useAppDispatch()
+	const { editCategory } = categoryActions
 	const categoriesState = useAppSelector(
 		(state: RootState) => state.categoriesReducer
 	)
 	const {
-		categories: existingCategories,
-		currentCategory: selectedCategory,
-	} = categoriesState
-	const dispatch = useAppDispatch()
+		categories,
+		currentCategory,
+	}: { categories: ICategory[]; currentCategory: ICategory } = categoriesState
+
+	const [category, setCategory] = useState<string>('')
 
 	useEffect(() => {
-		selectedCategory && setCategory(selectedCategory.name)
-	}, [selectedCategory])
+		currentCategory && setCategory(currentCategory.name)
+	}, [currentCategory])
 
 	const onClick = () => {
 		resetToDefault()
@@ -44,21 +43,13 @@ const CategoryTitleBar = ({
 	const onSubmit = () => {
 		if (category === '') {
 			M.toast({ html: toolbar.toast.addPrompt })
-		} else if (findExisting(existingCategories, 'name', category)) {
+		} else if (findExisting(categories, 'name', category)) {
 			M.toast({ html: toolbar.toast.alreadyExistsPrompt })
 		} else {
 			dispatch(
 				editCategory({
-					id: selectedCategory.id,
+					id: currentCategory.id,
 					name: category,
-					locations: selectedCategory.locations,
-				})
-			)
-			dispatch(
-				setCurrentCategory({
-					id: selectedCategory.id,
-					name: category,
-					locations: selectedCategory.locations,
 				})
 			)
 
@@ -69,7 +60,7 @@ const CategoryTitleBar = ({
 
 	const resetToDefault = () => {
 		if (isEditMode) {
-			setCategory(selectedCategory.name)
+			setCategory(currentCategory.name)
 		}
 	}
 
@@ -77,9 +68,11 @@ const CategoryTitleBar = ({
 		setIsEditMode(!isEditMode)
 	}
 
+	const isCategorySelected = currentCategory && currentCategory.name
+
 	return (
 		<div className="category-title-input-container">
-			{isEditMode && selectedCategory ? (
+			{isEditMode && isCategorySelected ? (
 				<div className="title-input">
 					<input
 						name="category"
@@ -91,11 +84,11 @@ const CategoryTitleBar = ({
 				</div>
 			) : (
 				<div className="category-title">
-					{/* {selectedCategory ? category : toolbar.title} */}
-					{selectedCategory ? selectedCategory.name : toolbar.title}
+					{/* {currentCategory ? category : toolbar.title} */}
+					{isCategorySelected ? currentCategory.name : toolbar.title}
 				</div>
 			)}
-			{selectedCategory && (
+			{currentCategory && currentCategory.name && (
 				<EditBtn
 					editMode="inline"
 					editingState={isEditMode}

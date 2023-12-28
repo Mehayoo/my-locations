@@ -1,14 +1,10 @@
-import { RootState, useAppSelector } from '../../store/store'
+import { RootState, useAppSelector } from '../../redux/store'
 import { EditBtn } from '../index'
+import { ILocation, ILocationsState } from '../../entityTypes'
 import { literals } from '../../constants'
+import { ILocationTitleBarProps } from './types'
 
 import './style.scss'
-
-interface ILocationTitleBarProps {
-	isEditMode: boolean
-	setIsEditMode: (arg: boolean) => void
-	setIsOpen: (arg: boolean) => void
-}
 
 const LocationTitleBar = ({
 	isEditMode,
@@ -20,12 +16,12 @@ const LocationTitleBar = ({
 			toolbar: { title, tooltips },
 		},
 	} = literals
-	const categoriesState = useAppSelector(
-		(state: RootState) => state.categoriesReducer
+	const locationsState: ILocationsState = useAppSelector(
+		(state: RootState) => state.locationsReducer
 	)
-	const { currentLocation: selectedLocation } = categoriesState
+	const { currentLocation }: { currentLocation: ILocation } = locationsState
 
-	const onClick = () => {
+	const onClick = (): void => {
 		setIsEditMode(true)
 		setIsOpen(true)
 	}
@@ -33,9 +29,11 @@ const LocationTitleBar = ({
 	return (
 		<div className="location-title-container">
 			<div className="location-title">
-				{selectedLocation ? selectedLocation.name : title}
+				{currentLocation && currentLocation.name
+					? currentLocation.name
+					: title}
 			</div>
-			{selectedLocation && (
+			{currentLocation && Object.keys(currentLocation).length > 0 && (
 				<EditBtn
 					editMode="popup"
 					editingState={isEditMode}

@@ -1,6 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit'
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux'
-import { rootReducer } from '../reducers'
+import { rootReducer } from './reducers'
 
 function saveToLocalStorage(state: RootState): void {
 	try {

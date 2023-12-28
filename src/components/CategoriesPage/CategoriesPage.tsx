@@ -1,14 +1,10 @@
 import { useRef, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { NavigateFunction, useNavigate } from 'react-router-dom'
 import { Button, Icon } from 'react-materialize'
-import { RootState, useAppDispatch, useAppSelector } from '../../store/store'
-import {
-	clearCurrentCategory,
-	deleteCategory,
-	setCurrentCategory,
-} from '../../actions/categoryActions'
+import { RootState, useAppDispatch, useAppSelector } from '../../redux/store'
+import { categoryActions } from '../../redux/reducers/categories/slice'
 import { CategoryModal, CategoryTitleBar, List, Toolbar } from '../index'
-import { ICategory } from '../../entityTypes'
+import { ICategoriesState, ICategory } from '../../entityTypes'
 import { useOutsideOfAreaClick } from '../../hooks/useOutsideOfAreaClick'
 import { Icons, literals } from '../../constants'
 
@@ -16,31 +12,37 @@ const CategoriesPage = () => {
 	const {
 		categoriesPage: { buttons, emptyList, toolbar },
 	} = literals
-	const navigate = useNavigate()
-	const [isModalOpen, setIsModalOpen] = useState(false)
+	const navigate: NavigateFunction = useNavigate()
+
+	const dispatch = useAppDispatch()
+	const { clearCurrentCategory, deleteCategory, setCurrentCategory } =
+		categoryActions
+	const categoriesState: ICategoriesState = useAppSelector(
+		(state: RootState) => state.categoriesReducer
+	)
+	const {
+		categories,
+		currentCategory,
+	}: { categories: ICategory[]; currentCategory: ICategory } = categoriesState
+
+	const [isModalOpen, setIsModalOpen] = useState<boolean>(false)
 
 	const wrapperRef = useRef<HTMLDivElement>(null)
 	useOutsideOfAreaClick(wrapperRef, clearCurrentCategory, isModalOpen)
 
-	const categoriesState = useAppSelector(
-		(state: RootState) => state.categoriesReducer
-	)
-	const { categories, currentCategory } = categoriesState
-	const dispatch = useAppDispatch()
-
-	const deleteFunction = () => {
-		dispatch(deleteCategory(currentCategory.id))
+	const deleteFunction = (): void => {
+		dispatch(deleteCategory(currentCategory.id!))
 		dispatch(clearCurrentCategory())
 	}
 
-	const onItemClick = (selectedItem: ICategory) => {
+	const onItemClick = (selectedItem: ICategory): void => {
 		dispatch(setCurrentCategory(selectedItem))
 	}
 
 	return (
 		<div className="container" ref={wrapperRef}>
 			<div className="section">
-				<Toolbar
+				<Toolbar<ICategory>
 					addTooltipMsg={toolbar.tooltips.addTooltipMsg}
 					deleteFunction={deleteFunction}
 					deleteTooltipMsg={toolbar.tooltips.deleteTooltipMsg}
@@ -69,7 +71,7 @@ const CategoriesPage = () => {
 						</>
 					)}
 				</Toolbar>
-				<List
+				<List<ICategory>
 					emptyMsg={emptyList}
 					listItems={categories}
 					onItemClick={onItemClick}

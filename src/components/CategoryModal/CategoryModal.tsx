@@ -2,22 +2,15 @@ import { useEffect, useRef, useState } from 'react'
 import { Modal } from 'react-bootstrap'
 import { Button, Icon } from 'react-materialize'
 import { v4 as uuidv4 } from 'uuid'
-import { RootState, useAppDispatch, useAppSelector } from '../../store/store'
-import { addCategory } from '../../actions/categoryActions'
-import { ICategory } from '../../entityTypes'
+import { RootState, useAppDispatch, useAppSelector } from '../../redux/store'
+import { categoryActions } from '../../redux/reducers/categories/slice'
+import { ICategoriesState, ICategory } from '../../entityTypes'
 import { findExisting } from '../../utils/findExisting'
 import { Icons, literals } from '../../constants'
+import { IAddCategoryModalProps } from './types'
 
 import M from 'materialize-css'
 import './style.scss'
-
-interface IAddCategoryModalProps {
-	isOpen: boolean
-	isViewMode: boolean
-	selectedCategory: ICategory
-	setIsOpen: (arg: boolean) => void
-	setIsViewMode: (arg: boolean) => void
-}
 
 const CategoryModal = ({
 	isOpen,
@@ -29,14 +22,17 @@ const CategoryModal = ({
 	const {
 		categoriesPage: { modal },
 	} = literals
-	const categoriesState = useAppSelector(
-		(state: RootState) => state.categoriesReducer
-	)
-	const { categories: existingCategories } = categoriesState
-	const [category, setCategory] = useState('')
-	const fieldsRef = useRef<ICategory>()
 
 	const dispatch = useAppDispatch()
+	const { addCategory } = categoryActions
+	const categoriesState: ICategoriesState = useAppSelector(
+		(state: RootState) => state.categoriesReducer
+	)
+	const { categories }: { categories: ICategory[] } = categoriesState
+
+	const [category, setCategory] = useState<string>('')
+
+	const fieldsRef = useRef<ICategory>()
 
 	useEffect(() => {
 		if (selectedCategory) {
@@ -44,15 +40,13 @@ const CategoryModal = ({
 		}
 	})
 
-	const onSubmit = () => {
+	const onSubmit = (): void => {
 		if (category === '') {
 			M.toast({ html: modal.toast.addPrompt })
-		} else if (findExisting(existingCategories, 'name', category)) {
+		} else if (findExisting(categories, 'name', category)) {
 			M.toast({ html: modal.toast.alreadyExistsPrompt })
 		} else {
-			dispatch(
-				addCategory({ id: uuidv4(), name: category, locations: [] })
-			)
+			dispatch(addCategory({ id: uuidv4(), name: category }))
 			M.toast({ html: modal.toast.addedPrompt })
 			setCategory('')
 			setIsOpen(false)

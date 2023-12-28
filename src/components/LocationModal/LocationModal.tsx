@@ -1,26 +1,17 @@
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { Modal } from 'react-bootstrap'
 import { Button, Icon } from 'react-materialize'
 import { v4 as uuidv4 } from 'uuid'
-import { RootState, useAppDispatch, useAppSelector } from '../../store/store'
-import { addLocation, editLocation } from '../../actions/categoryActions'
+import { RootState, useAppDispatch, useAppSelector } from '../../redux/store'
+import { locationActions } from '../../redux/reducers/locations/slice'
 import { ILocation } from '../../entityTypes'
 import { nestedPropertyIsEmpty } from '../../utils/nestedPropertyIsEmpty'
 import { nestedPropertyExists } from '../../utils/nestedPropertyExists'
 import { Icons, literals } from '../../constants'
+import { ILocationModalProps } from './types'
 
 import M from 'materialize-css'
 import './style.scss'
-
-interface ILocationModalProps {
-	isEditMode: boolean
-	isOpen: boolean
-	isViewMode: boolean
-	selectedLocation: ILocation
-	setIsEditMode: (arg: boolean) => void
-	setIsOpen: (arg: boolean) => void
-	setIsViewMode: (arg: boolean) => void
-}
 
 const LocationModal = ({
 	isEditMode,
@@ -36,20 +27,34 @@ const LocationModal = ({
 			modal: { buttons, createTitle, form, toast, viewTitle },
 		},
 	} = literals
+	const dispatch = useAppDispatch()
+	const { addLocation, editLocation } = locationActions
+	const currentCategory = useAppSelector(
+		(state: RootState) => state.categoriesReducer.currentCategory
+	)
+
 	const [location, setLocation] = useState<ILocation>({
 		name: '',
 		address: '',
 		coordinates: {
-			lat: '',
-			lng: '',
+			lat: null,
+			lng: null,
 		},
+		categoryId: currentCategory.id!,
 	})
 	const selectedLocationId = useRef('')
 
-	const selectedCategory = useAppSelector(
-		(state: RootState) => state.categoriesReducer.currentCategory
-	)
-	const dispatch = useAppDispatch()
+	const resetFieldsValue = useCallback(() => {
+		setLocation({
+			name: '',
+			address: '',
+			coordinates: {
+				lat: null,
+				lng: null,
+			},
+			categoryId: currentCategory.id!,
+		})
+	}, [currentCategory.id])
 
 	useEffect(() => {
 		if (selectedLocation) {
@@ -60,7 +65,7 @@ const LocationModal = ({
 		if (isOpen && !isEditMode && !isViewMode) {
 			resetFieldsValue()
 		}
-	}, [isEditMode, isOpen, isViewMode, selectedLocation])
+	}, [isEditMode, isOpen, isViewMode, resetFieldsValue, selectedLocation])
 
 	const onSubmit = () => {
 		if (isEditMode) {
@@ -69,12 +74,10 @@ const LocationModal = ({
 					editLocation({
 						...location,
 						id: selectedLocationId.current,
-						category: {
-							id: selectedCategory.id,
-							name: selectedCategory.name,
-						},
+						categoryId: currentCategory.id!,
 					})
 				)
+
 				M.toast({ html: toast.updatedPrompt })
 				resetFieldsValue()
 				setIsOpen(false)
@@ -82,18 +85,16 @@ const LocationModal = ({
 		} else {
 			if (
 				!(
-					nestedPropertyIsEmpty(location) ||
-					nestedPropertyExists(location, selectedCategory.locations)
+					nestedPropertyIsEmpty(location)
+					// ||
+					// nestedPropertyExists(location, currentCategory.locations)
 				)
 			) {
 				dispatch(
 					addLocation({
 						...location,
 						id: uuidv4(),
-						category: {
-							id: selectedCategory.id,
-							name: selectedCategory.name,
-						},
+						categoryId: currentCategory.id!,
 					})
 				)
 				M.toast({ html: toast.addedPrompt })
@@ -101,17 +102,6 @@ const LocationModal = ({
 				setIsOpen(false)
 			}
 		}
-	}
-
-	const resetFieldsValue = () => {
-		setLocation({
-			name: '',
-			address: '',
-			coordinates: {
-				lat: '',
-				lng: '',
-			},
-		})
 	}
 
 	return (
@@ -136,7 +126,7 @@ const LocationModal = ({
 						disabled={isViewMode}
 						name="name"
 						type="text"
-						value={location?.name}
+						value={location?.name ?? ''}
 						onChange={(e) =>
 							setLocation({
 								...location,
@@ -154,7 +144,7 @@ const LocationModal = ({
 						disabled={isViewMode}
 						name="address"
 						type="text"
-						value={location?.address}
+						value={location?.address ?? ''}
 						onChange={(e) =>
 							setLocation({
 								...location,
@@ -172,14 +162,17 @@ const LocationModal = ({
 						<input
 							disabled={isViewMode}
 							name="lat"
-							type="text"
-							value={location?.coordinates.lat}
+							type="number"
+							value={location?.coordinates?.lat ?? ''}
 							onChange={(e) =>
 								setLocation({
 									...location,
 									coordinates: {
 										...location.coordinates,
-										[e.target.name]: e.target.value,
+										[e.target.name]:
+											e.target.value === ''
+												? null
+												: Number(e.target.value),
 									},
 								})
 							}
@@ -192,14 +185,17 @@ const LocationModal = ({
 						<input
 							disabled={isViewMode}
 							name="lng"
-							type="text"
-							value={location?.coordinates.lng}
+							type="number"
+							value={location?.coordinates?.lng ?? ''}
 							onChange={(e) => {
 								setLocation({
 									...location,
 									coordinates: {
 										...location.coordinates,
-										[e.target.name]: e.target.value,
+										[e.target.name]:
+											e.target.value === ''
+												? null
+												: Number(e.target.value),
 									},
 								})
 							}}
@@ -215,7 +211,7 @@ const LocationModal = ({
 						disabled
 						name="category.name"
 						type="text"
-						value={selectedCategory.name}
+						value={currentCategory.name}
 					/>
 				</div>
 			</Modal.Body>

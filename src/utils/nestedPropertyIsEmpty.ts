@@ -3,12 +3,12 @@ import { literals } from '../constants'
 
 const { general } = literals
 
-export const nestedPropertyIsEmpty = (obj: any) => {
+export const nestedPropertyIsEmpty = (obj: Record<string, any>) => {
 	let result = false
 
-	const recurse = (searchObj: any) => {
+	const recurse = (searchObj: Record<string, any>) => {
 		for (const key in searchObj) {
-			if (searchObj[key] === '') {
+			if (searchObj[key] === '' || searchObj[key] === null) {
 				M.toast({ html: general.fieldEmpty(key) })
 				result = true
 

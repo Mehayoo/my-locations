@@ -17,6 +17,7 @@
 		"react": "^18.2.0",
 		"react-bootstrap": "^2.9.2",
 		"react-dom": "^18.2.0",
+		"react-hook-form": "^7.49.2",
 		"react-materialize": "^3.10.0",
 		"react-redux": "^9.0.4",
 		"react-router-dom": "^6.21.1",

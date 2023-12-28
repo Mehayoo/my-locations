@@ -3,8 +3,11 @@ export interface ILocation {
 	name: string
 	address: string
 	coordinates: {
-		lat: number | null
-		lng: number | null
+		lat: string
+		lng: string
 	}
-	categoryId: string
+	category?: {
+		id: string
+		name: string
+	}
 }

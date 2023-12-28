@@ -1,4 +1,4 @@
-export interface ICategory {
+export interface IBaseItem {
 	id?: string
 	name: string
 }

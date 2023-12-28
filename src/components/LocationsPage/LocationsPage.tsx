@@ -1,14 +1,15 @@
 import { useRef, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { NavigateFunction, useNavigate } from 'react-router-dom'
 import { Button, Icon } from 'react-materialize'
-import { RootState, useAppDispatch, useAppSelector } from '../../store/store'
-import {
-	clearCurrentLocation,
-	deleteLocation,
-	setCurrentLocation,
-} from '../../actions/categoryActions'
+import { RootState, useAppDispatch, useAppSelector } from '../../redux/store'
+import { locationActions } from '../../redux/reducers/locations/slice'
 import { Toolbar, List, LocationModal, LocationTitleBar } from '../index'
-import { ICategory, ILocation } from '../../entityTypes'
+import {
+	ICategoriesState,
+	ICategory,
+	ILocation,
+	ILocationsState,
+} from '../../entityTypes'
 import { useOutsideOfAreaClick } from '../../hooks/useOutsideOfAreaClick'
 import { Icons, literals } from '../../constants'
 
@@ -16,36 +17,45 @@ const LocationsPage = () => {
 	const {
 		locationsPage: { buttons, emptyList, toolbar },
 	} = literals
+	const navigate: NavigateFunction = useNavigate()
+
 	const [isModalOpen, setIsModalOpen] = useState(false)
+
+	const dispatch = useAppDispatch()
+	const { clearCurrentLocation, deleteLocation, setCurrentLocation } =
+		locationActions
+	const categoriesState: ICategoriesState = useAppSelector(
+		(state: RootState) => state.categoriesReducer
+	)
+	const locationsState: ILocationsState = useAppSelector(
+		(state: RootState) => state.locationsReducer
+	)
+	const { currentCategory }: { currentCategory: ICategory } = categoriesState
+	const {
+		locations,
+		currentLocation,
+	}: { locations: ILocation[]; currentLocation: ILocation } = locationsState
 
 	const wrapperRef = useRef<HTMLDivElement>(null)
 	useOutsideOfAreaClick(wrapperRef, clearCurrentLocation, isModalOpen)
 
-	const appState = useAppSelector(
-		(state: RootState) => state.categoriesReducer
-	)
-	const { categories, currentCategory, currentLocation } = appState
-	const dispatch = useAppDispatch()
-
-	const navigate = useNavigate()
-
-	const deleteFunction = () => {
-		dispatch(deleteLocation(currentCategory.id, currentLocation.id!))
+	const deleteFunction = (): void => {
+		dispatch(deleteLocation(currentLocation.id!))
 		dispatch(clearCurrentLocation())
 	}
 
-	const listItems = (categories as ICategory[]).filter(
-		(category: any) => category.id === currentCategory.id
-	)
-
-	const onItemClick = (selectedItem: ILocation) => {
+	const onItemClick = (selectedItem: ILocation): void => {
 		dispatch(setCurrentLocation(selectedItem))
 	}
+
+	const listItems: ILocation[] = locations.filter(
+		(location: ILocation) => location.categoryId === currentCategory.id
+	)
 
 	return (
 		<div className="container" ref={wrapperRef}>
 			<div className="section">
-				<Toolbar
+				<Toolbar<ILocation>
 					addTooltipMsg={toolbar.tooltips.addTooltipMsg}
 					deleteFunction={deleteFunction}
 					deleteTooltipMsg={toolbar.tooltips.deleteTooltipMsg}
@@ -77,9 +87,9 @@ const LocationsPage = () => {
 						</>
 					)}
 				</Toolbar>
-				<List
+				<List<ILocation>
 					emptyMsg={emptyList(currentCategory.name)}
-					listItems={listItems[0].locations}
+					listItems={listItems}
 					onItemClick={onItemClick}
 					selectedItem={currentLocation}
 				/>
