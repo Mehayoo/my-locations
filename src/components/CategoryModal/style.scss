@@ -3,6 +3,17 @@
 		margin-left: 1rem;
 	}
 
+	.input-container {
+		position: relative;
+	}
+
+	.error-container {
+		bottom: -1.3rem;
+		color: red;
+		left: 0;
+		position: absolute;
+	}
+
 	left: 50% !important;
 	max-height: fit-content !important;
 	right: unset !important;

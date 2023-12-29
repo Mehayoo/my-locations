@@ -1,5 +1,10 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { ICategoriesState, ICategory } from '../../../entityTypes'
+import { v4 as uuidv4 } from 'uuid'
+import {
+	ICategoriesState,
+	ICategory,
+	ICategoryDraft,
+} from '../../../entityTypes'
 
 const initialState: ICategoriesState = {
 	categories: [],
@@ -11,27 +16,47 @@ const categoriesSlice = createSlice({
 	initialState,
 	reducers: {
 		reset: () => initialState,
-		addCategory: (state, action: PayloadAction<ICategory>) => {
-			state.categories.push(action.payload)
-			state.currentCategory = action.payload
+		addCategory: {
+			reducer: (
+				state: ICategoriesState,
+				action: PayloadAction<ICategory>
+			): void => {
+				state.categories.push(action.payload)
+				state.currentCategory = action.payload
+			},
+			prepare: (category: ICategoryDraft) => ({
+				payload: {
+					id: uuidv4(),
+					...category,
+				},
+			}),
 		},
-		editCategory: (state, action: PayloadAction<ICategory>) => {
+		editCategory: (
+			state: ICategoriesState,
+			action: PayloadAction<ICategory>
+		): void => {
 			const index = state.categories.findIndex(
 				(category: ICategory) => category.id === action.payload.id
 			)
 			state.categories[index] = action.payload
 			state.currentCategory = action.payload
 		},
-		deleteCategory: (state, action: PayloadAction<string>) => {
+		deleteCategory: (
+			state: ICategoriesState,
+			action: PayloadAction<string>
+		): void => {
 			const index = state.categories.findIndex(
 				(category: ICategory) => category.id === action.payload
 			)
 			state.categories.splice(index, 1)
 		},
-		setCurrentCategory: (state, action: PayloadAction<ICategory>) => {
+		setCurrentCategory: (
+			state: ICategoriesState,
+			action: PayloadAction<ICategory>
+		): void => {
 			state.currentCategory = action.payload
 		},
-		clearCurrentCategory: (state) => {
+		clearCurrentCategory: (state: ICategoriesState): void => {
 			state.currentCategory = {} as ICategory
 		},
 	},

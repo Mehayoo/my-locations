@@ -1,5 +1,5 @@
 export interface ILocation {
-	id?: string
+	id: string
 	name: string
 	address: string
 	coordinates: {
@@ -8,3 +8,5 @@ export interface ILocation {
 	}
 	categoryId: string
 }
+
+export type ILocationDraft = Omit<ILocation, 'id'>

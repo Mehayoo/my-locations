@@ -89,4 +89,12 @@ export const literals = {
 		content:
 			'This is a small and simple demo app showcasing the use of React, Typescript and Redux Toolkit. @Copyright Sorin-Ionut Mihaiu, 2022.',
 	},
+	inputsErrors: {
+		required: 'This field cannot be empty',
+		minLength: (value: number) =>
+			`Minimum length is ${value} characters long`,
+		mustBeNumber: 'Value must be a number',
+		getMin: (value: number) => `Minimum value accepted is ${value}`,
+		getMax: (value: number) => `Maximum value accepted is ${value}`,
+	},
 }

@@ -1,13 +1,15 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect } from 'react'
 import { Modal } from 'react-bootstrap'
 import { Button, Icon } from 'react-materialize'
-import { v4 as uuidv4 } from 'uuid'
+import { useForm } from 'react-hook-form'
+import { yupResolver } from '@hookform/resolvers/yup'
+import * as Yup from 'yup'
 import { RootState, useAppDispatch, useAppSelector } from '../../redux/store'
 import { categoryActions } from '../../redux/reducers/categories/slice'
 import { ICategoriesState, ICategory } from '../../entityTypes'
 import { findExisting } from '../../utils/findExisting'
 import { Icons, literals } from '../../constants'
-import { IAddCategoryModalProps } from './types'
+import { FormInputs, IAddCategoryModalProps } from './types'
 
 import M from 'materialize-css'
 import './style.scss'
@@ -21,6 +23,7 @@ const CategoryModal = ({
 }: IAddCategoryModalProps) => {
 	const {
 		categoriesPage: { modal },
+		inputsErrors,
 	} = literals
 
 	const dispatch = useAppDispatch()
@@ -30,25 +33,31 @@ const CategoryModal = ({
 	)
 	const { categories }: { categories: ICategory[] } = categoriesState
 
-	const [category, setCategory] = useState<string>('')
-
-	const fieldsRef = useRef<ICategory>()
+	const formSchema = Yup.object().shape({
+		name: Yup.string()
+			.required(inputsErrors.required)
+			.min(3, inputsErrors.minLength(3)),
+	})
+	const { formState, handleSubmit, register, reset } = useForm<FormInputs>({
+		resolver: yupResolver(formSchema),
+		mode: 'all',
+	})
+	const { errors, isValid } = formState
 
 	useEffect(() => {
-		if (selectedCategory) {
-			fieldsRef.current = selectedCategory
+		if (selectedCategory && isViewMode) {
+			reset({ name: selectedCategory.name })
+		} else {
+			reset({ name: '' })
 		}
-	})
+	}, [isViewMode, reset, selectedCategory])
 
-	const onSubmit = (): void => {
-		if (category === '') {
-			M.toast({ html: modal.toast.addPrompt })
-		} else if (findExisting(categories, 'name', category)) {
+	const onSubmit = (data: FormInputs) => {
+		if (findExisting(categories, 'name', data.name)) {
 			M.toast({ html: modal.toast.alreadyExistsPrompt })
 		} else {
-			dispatch(addCategory({ id: uuidv4(), name: category }))
+			dispatch(addCategory({ name: data.name }))
 			M.toast({ html: modal.toast.addedPrompt })
-			setCategory('')
 			setIsOpen(false)
 		}
 	}
@@ -71,19 +80,18 @@ const CategoryModal = ({
 					<label htmlFor="name" className="active">
 						{modal.form.categoryName}
 					</label>
-					<input
-						disabled={isViewMode}
-						name="name"
-						type="text"
-						value={
-							isViewMode && fieldsRef.current
-								? fieldsRef.current.name
-								: category
-						}
-						onChange={(e) => {
-							setCategory(e.target.value)
-						}}
-					/>
+					<div className="input-container">
+						<input
+							disabled={isViewMode}
+							type="text"
+							{...register('name', { required: true })}
+						/>
+						{errors.name && (
+							<span className="error-container">
+								{errors.name.message}
+							</span>
+						)}
+					</div>
 				</div>
 			</Modal.Body>
 			<Modal.Footer>
@@ -91,7 +99,7 @@ const CategoryModal = ({
 					className="red"
 					node="button"
 					onClick={() => {
-						setCategory('')
+						reset({ name: '' })
 						setIsOpen(false)
 						setIsViewMode(false)
 					}}
@@ -99,7 +107,11 @@ const CategoryModal = ({
 					{modal.buttons.close}
 				</Button>
 
-				<Button disabled={isViewMode} node="button" onClick={onSubmit}>
+				<Button
+					disabled={isViewMode || !isValid}
+					node="button"
+					onClick={handleSubmit(onSubmit)}
+				>
 					{modal.buttons.submit} <Icon right>{Icons.SEND}</Icon>
 				</Button>
 			</Modal.Footer>

@@ -7,3 +7,7 @@ export interface IAddCategoryModalProps {
 	readonly setIsOpen: (arg: boolean) => void
 	readonly setIsViewMode: (arg: boolean) => void
 }
+
+export interface FormInputs {
+	name: string
+}

@@ -65,7 +65,6 @@ const LocationsPage = () => {
 					{({
 						isEditMode,
 						isViewMode,
-						selectedItem,
 						setIsEditMode,
 						setIsViewMode,
 					}) => (
@@ -76,10 +75,10 @@ const LocationsPage = () => {
 								setIsOpen={setIsModalOpen}
 							/>
 							<LocationModal
+								categoryLocations={listItems}
 								isEditMode={isEditMode}
 								isOpen={isModalOpen}
 								isViewMode={isViewMode}
-								selectedLocation={selectedItem}
 								setIsEditMode={setIsEditMode}
 								setIsOpen={setIsModalOpen}
 								setIsViewMode={setIsViewMode}

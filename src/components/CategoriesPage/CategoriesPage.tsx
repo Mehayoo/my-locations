@@ -31,7 +31,7 @@ const CategoriesPage = () => {
 	useOutsideOfAreaClick(wrapperRef, clearCurrentCategory, isModalOpen)
 
 	const deleteFunction = (): void => {
-		dispatch(deleteCategory(currentCategory.id!))
+		dispatch(deleteCategory(currentCategory.id))
 		dispatch(clearCurrentCategory())
 	}
 

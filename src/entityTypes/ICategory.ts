@@ -1,4 +1,6 @@
 export interface ICategory {
-	id?: string
+	id: string
 	name: string
 }
+
+export type ICategoryDraft = Omit<ICategory, 'id'>

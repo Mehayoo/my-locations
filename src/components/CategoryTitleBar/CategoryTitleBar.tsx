@@ -1,12 +1,15 @@
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { Button } from 'react-materialize'
+import { useForm } from 'react-hook-form'
+import { yupResolver } from '@hookform/resolvers/yup'
+import * as Yup from 'yup'
 import { RootState, useAppDispatch, useAppSelector } from '../../redux/store'
 import { categoryActions } from '../../redux/reducers/categories/slice'
 import { EditBtn } from '../index'
-import { findExisting } from '../../utils/findExisting'
 import { ICategory } from '../../entityTypes'
+import { findExisting } from '../../utils/findExisting'
 import { literals } from '../../constants'
-import { ICategoryTitleBarProps } from './types'
+import { FormInputs, ICategoryTitleBarProps } from './types'
 
 import M from 'materialize-css'
 import './style.scss'
@@ -17,6 +20,7 @@ const CategoryTitleBar = ({
 }: ICategoryTitleBarProps) => {
 	const {
 		categoriesPage: { toolbar },
+		inputsErrors,
 	} = literals
 
 	const dispatch = useAppDispatch()
@@ -29,29 +33,34 @@ const CategoryTitleBar = ({
 		currentCategory,
 	}: { categories: ICategory[]; currentCategory: ICategory } = categoriesState
 
-	const [category, setCategory] = useState<string>('')
+	const formSchema = Yup.object().shape({
+		id: Yup.string(),
+		name: Yup.string()
+			.required(inputsErrors.required)
+			.min(3, inputsErrors.minLength(3)),
+	})
+	const { formState, handleSubmit, register, reset } = useForm<FormInputs>({
+		resolver: yupResolver(formSchema),
+		mode: 'all',
+	})
+	const { errors, isValid } = formState
 
 	useEffect(() => {
-		currentCategory && setCategory(currentCategory.name)
-	}, [currentCategory])
+		if (currentCategory) {
+			reset({ name: currentCategory.name })
+		}
+	}, [currentCategory, reset])
 
 	const onClick = () => {
 		resetToDefault()
 		toggleEditing()
 	}
 
-	const onSubmit = () => {
-		if (category === '') {
-			M.toast({ html: toolbar.toast.addPrompt })
-		} else if (findExisting(categories, 'name', category)) {
+	const onSubmit = (data: FormInputs) => {
+		if (findExisting(categories, 'name', data.name)) {
 			M.toast({ html: toolbar.toast.alreadyExistsPrompt })
 		} else {
-			dispatch(
-				editCategory({
-					id: currentCategory.id,
-					name: category,
-				})
-			)
+			dispatch(editCategory({ id: currentCategory.id, name: data.name }))
 
 			setIsEditMode(false)
 			M.toast({ html: toolbar.toast.updatedPrompt })
@@ -60,7 +69,7 @@ const CategoryTitleBar = ({
 
 	const resetToDefault = () => {
 		if (isEditMode) {
-			setCategory(currentCategory.name)
+			reset({ name: currentCategory.name })
 		}
 	}
 
@@ -75,12 +84,17 @@ const CategoryTitleBar = ({
 			{isEditMode && isCategorySelected ? (
 				<div className="title-input">
 					<input
-						name="category"
-						onChange={(e) => setCategory(e.target.value)}
 						type="text"
-						value={category}
+						{...register('name', { required: true })}
 					/>
-					<Button onClick={onSubmit}>{toolbar.buttons.submit}</Button>
+					{/* <span>{errors.name && errors.name.message}</span> */}
+					<Button
+						disabled={!isValid}
+						onClick={handleSubmit(onSubmit)}
+						tooltip={errors.name && errors.name.message}
+					>
+						{toolbar.buttons.submit}
+					</Button>
 				</div>
 			) : (
 				<div className="category-title">
