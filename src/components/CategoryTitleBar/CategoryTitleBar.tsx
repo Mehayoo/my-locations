@@ -98,7 +98,6 @@ const CategoryTitleBar = ({
 				</div>
 			) : (
 				<div className="category-title">
-					{/* {currentCategory ? category : toolbar.title} */}
 					{isCategorySelected ? currentCategory.name : toolbar.title}
 				</div>
 			)}
