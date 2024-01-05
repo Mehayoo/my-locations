@@ -3,6 +3,7 @@ import { literals } from '../constants'
 
 const { general } = literals
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const nestedPropertyExists = (obj: Record<string, any>, arr: any[]) => {
 	let result = false
 

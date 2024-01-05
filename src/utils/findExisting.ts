@@ -1,9 +1,10 @@
-import { find as loadashFind } from "lodash";
+import { find as loadashFind } from 'lodash'
 
 export const findExisting = (
-  searchArr: any[],
-  propName: string,
-  propValue: string
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	searchArr: any[],
+	propName: string,
+	propValue: string
 ) => {
-  return loadashFind(searchArr, { [propName]: propValue });
-};
+	return loadashFind(searchArr, { [propName]: propValue })
+}

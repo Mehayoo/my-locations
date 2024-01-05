@@ -1,3 +1,4 @@
+import React from 'react'
 import { ListItem } from '../index'
 import { IBaseItem } from '../../entityTypes'
 import { IListProps } from './types'

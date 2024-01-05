@@ -1,3 +1,4 @@
+import React from 'react'
 import { useEffect, useState } from 'react'
 import { Button } from 'react-materialize'
 import { EditBtn } from '../../index'
@@ -7,7 +8,6 @@ import {
 	setCurrentCategory,
 } from '../../../redux/old/actions/categoryActions'
 import { RootState } from '../../../redux/old/reducers'
-import { ICategory } from '../../../entityTypes/old/ICategory'
 import { findExisting } from '../../../utils/findExisting'
 
 import M from 'materialize-css'

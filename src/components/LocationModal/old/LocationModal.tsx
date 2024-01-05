@@ -1,3 +1,4 @@
+import React from 'react'
 import { useEffect, useRef, useState } from 'react'
 import { Button, Icon, Modal } from 'react-materialize'
 import { useDispatch, useSelector } from 'react-redux'
@@ -43,6 +44,7 @@ const LocationModal = ({
 	const selectedLocationId = useRef('')
 
 	const selectedCategory = useSelector(
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		(state: any) => state.categoriesReducer.currentCategory
 	)
 	const dispatch = useDispatch()
@@ -111,8 +113,9 @@ const LocationModal = ({
 	}
 
 	return (
-		// @ts-ignore
 		// Added bc I wanted to keep the old way I did things, but after upgrading to react 18, I don't want to bother with fixing this component which is not of use anymore
+		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+		// @ts-ignore
 		<Modal
 			actions={[]}
 			header={isViewMode ? 'Location Details' : 'Enter New Location'}

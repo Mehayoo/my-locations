@@ -1,3 +1,4 @@
+import React from 'react'
 import { RootState, useAppSelector } from '../../redux/store'
 import { EditBtn } from '../index'
 import { ILocation, ILocationsState } from '../../entityTypes'
